@@ -73,6 +73,10 @@ var tools = (function(){
 			})
 			return index;
 		},
+		indexOfStr: function (classList,className) {
+			var re = new RegExp('\\b'+className+'\\b','g')
+			return re.test(classList);
+		},
 		removeData: function (data, index) {
 			data.splice(index,1);
 		},
@@ -107,14 +111,14 @@ var tools = (function(){
 			}
 			return parent;
 		},
-		getNowTime: function (n) {
-			var oDate = new Date();
+		getNowTime: function (n,oDate) {
+			oDate = oDate || new Date();
 			var year = oDate.getFullYear(),
-				month = oDate.getMonth()+1,
-				day = oDate.getDate(),
-				hour = oDate.getHours(),
-				minutes = oDate.getMinutes(),
-				seconds = oDate.getSeconds();
+				month = this.toDB(oDate.getMonth()+1),
+				day = this.toDB(oDate.getDate()),
+				hour = this.toDB(oDate.getHours()),
+				minutes = this.toDB(oDate.getMinutes()),
+				seconds = this.toDB(oDate.getSeconds());
 			return this.dateToString([year,month,day,hour,minutes,seconds],n);
 		},
 		dateToString: function (arr,n) {
@@ -126,6 +130,9 @@ var tools = (function(){
 				s += arr[i]+aStr[n].charAt(i);
 			}
 			return s;
+		},
+		toDB: function (num) {
+			return num<10?'0'+num: ''+num;
 		},
 		//判断某元素上是否有某个class，有就删除，没有就添加
 		addSelect: function (obj,className) {
@@ -166,6 +173,51 @@ var tools = (function(){
 				return false;
 			} else {
 				return true;
+			}
+		},
+		ajax: function (json) {
+			var settings = {
+				method: json.method || 'get',
+				url: json.url,
+				data: json.data,
+				success: json.success || function () {},
+				fail: json.fail || function () {},
+				type: json.type || 'json'
+			}
+			var arrTemp = [];
+			if ( window.toString.call(settings.data) === '[object Object]' ) {
+				for (var s in settings.data) {
+					arrTemp.push(s +'='+ settings.data[s]);
+				}
+				settings.data = arrTemp.join('&');
+			}
+			
+			var xhr = new XMLHttpRequest();
+			
+			if (settings.method === 'get') {
+				var w = settings.data? '?': ' ';
+				xhr.open(settings.method,settings.url + w + settings.data);
+				xhr.send();
+			} else {
+				xhr.open(settings.url);
+				xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+				xhr.send(settings.data);
+			}
+			xhr.onreadystatechange = function () {
+				if ( xhr.readyState === 4) {
+					
+					if ( xhr.status >= 200 && xhr.status <= 206 ) {
+						if ( settings.type === 'json' ) {
+							settings.success(eval('('+xhr.responseText+')'));
+						} else if ( settings.type === 'xml' ) {
+							settings.success(xhr.responseXML);
+						} else {
+							settings.success(xhr.responseText);
+						}
+					} else {
+						settings.fail(xhr.status);
+					}
+				}
 			}
 		}
 		

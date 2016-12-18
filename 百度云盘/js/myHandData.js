@@ -46,6 +46,16 @@ var dataControl = {
 		}
 		return true;
 	},
+	//查找数据中，某属性相同的所有数据
+	findFile: function(data,attr,val) {
+		var arr = [];
+		for ( var i=0; i<data.length; i++ ) {
+			if ( data[i][attr] === val ) {
+				arr.push(data[i]);
+			}
+		}
+		return arr;
+	},
 	removeData: function (data,id) {
 		for ( var i=data.length-1; i>=0; i-- ) {
 			if ( data[i].id === id ) {

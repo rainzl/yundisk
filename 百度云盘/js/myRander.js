@@ -30,6 +30,8 @@
 		this.bodyDblClick();
 		this.bodyClick();
 		this.btnListFn();
+		this.textSearch();
+		this.classSearch();
 		this.callback();//执行其他交互事件
 	}
 	DataRander.prototype.nav = function () {
@@ -92,7 +94,7 @@
 						</div>
 					</td>
 					<td>
-						<span>-</span>
+						<span>${json.size}</span>
 					</td>
 					<td>
 						<span class="fileChangeDate">${json.fileDate}</span>
@@ -315,6 +317,7 @@
 			pid: pid,
 			title:"新建文件夹",
 			type:"file",
+			size: '-',
 			fileDate: '-'
 		}
 		var str = this.randBody(obj);
@@ -372,6 +375,71 @@
 			fail && fail();
 			moduleName.style.display = 'none';
 		}
+	}
+	DataRander.prototype.textSearch = function () {
+		var _this = this;
+		//输入文件名搜索
+		var fileSearch = tools.$('#fileSearch');
+		
+		var oText = fileSearch.getElementsByTagName('input')[0];
+		var oSub = fileSearch.getElementsByTagName('a')[0];
+		
+		oSub.addEventListener('click',fnSubmit);//点击搜索
+		//回撤搜索
+		fileSearch.addEventListener('keydown',function(ev){
+			var ev = ev || event;
+			if ( ev.keyCode === 13) {
+				fnSubmit();
+				ev.preventDefault();
+			}
+		})
+		function fnSubmit() {
+			var val = oText.value;
+			if ( val.trim() === '' ) {
+				alert('请输入要搜索的文件名');
+			} else {
+				var arr = dataControl.findFile(data.files,'title',val);
+				if ( arr.length === 0 ) {
+					alert('没有找到您要搜索的文件')
+				} else {
+					_this.searchRandFile(arr);
+				}
+			}
+		}
+	}
+	//分类搜索
+	DataRander.prototype.classSearch = function () {
+		var _this = this;
+		var aside = tools.$('#aside');
+		
+		aside.addEventListener('click',function(ev){
+			if ( tools.indexOfStr(ev.target.className,'asideImg') || tools.indexOfStr(ev.target.parentNode.className,'asideImg') ) {
+				var imgArr = dataControl.findFile(data.files,'type','img');
+				_this.searchRandFile(imgArr);
+			} else if (tools.indexOfStr(ev.target.className,'asideText') ||tools.indexOfStr(ev.target.parentNode.className,'asideText')) {
+				var textArr = dataControl.findFile(data.files,'type','txt');
+				_this.searchRandFile(textArr);
+			} else if (tools.indexOfStr(ev.target.className,'asidevideo') || tools.indexOfStr(ev.target.parentNode.className,'asidevideo')) {
+				var videoArr = dataControl.findFile(data.files,'type','video');
+				_this.searchRandFile(videoArr);
+			} else if (tools.indexOfStr(ev.target.className,'asideSeed') || tools.indexOfStr(ev.target.parentNode.className,'asideSeed')) {
+				var seedArr = dataControl.findFile(data.files,'type','seed');
+				_this.searchRandFile(seedArr);
+			} else if (tools.indexOfStr(ev.target.className,'asideMusic') || tools.indexOfStr(ev.target.parentNode.className,'asideMusic')) {
+				var musicArr = dataControl.findFile(data.files,'type','music');
+				_this.searchRandFile(musicArr);
+			} else if (tools.indexOfStr(ev.target.className,'asideOther') || tools.indexOfStr(ev.target.parentNode.className,'asideOther')) {
+				var otherArr = dataControl.findFile(data.files,'type','other');
+				_this.searchRandFile(otherArr);
+			}
+		})
+	}
+	DataRander.prototype.searchRandFile = function (arr) {
+		var str = '';
+		for ( var i=0; i<arr.length; i++ ) {
+			str = this.randBody(arr[i]);
+		}
+		this.obj.innerHTML = str;
 	}
 	DataRander.prototype.findFile = function (id) {//根据id找dom中的文件节点
 		for ( var i=0; i<this.child.length; i++ ) {

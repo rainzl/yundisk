@@ -794,6 +794,48 @@ body {
 	height: 26px;
 	background: url(../img/filesIcon.png) no-repeat;
 }
+.files .imgIcon {
+	float: left;
+	margin: 7px 12px 7px 0;
+	width: 26px;
+	height: 30px;
+	background: url(../img/filesIcon.png) no-repeat 0 -40px;
+}
+.files .txtIcon {
+	float: left;
+	margin: 7px 12px 7px 0;
+	width: 26px;
+	height: 30px;
+	background: url(../img/filesIcon.png) no-repeat 0 -80px;
+}
+.files .videoIcon {
+	float: left;
+	margin: 7px 12px 7px 0;
+	width: 26px;
+	height: 30px;
+	background: url(../img/filesIcon.png) no-repeat -30px 0;
+}
+.files .seedIcon {
+	float: left;
+	margin: 7px 12px 7px 0;
+	width: 26px;
+	height: 30px;
+	background: url(../img/filesIcon.png) no-repeat -30px -40px;
+}
+.files .musicIcon {
+	float: left;
+	margin: 7px 12px 7px 0;
+	width: 26px;
+	height: 30px;
+	background: url(../img/filesIcon.png) no-repeat -30px -80px;
+}
+.files .otherIcon {
+	float: left;
+	margin: 7px 12px 7px 0;
+	width: 26px;
+	height: 30px;
+	background: url(../img/filesIcon.png) no-repeat 0 -120px;
+}
 .files span {
 	font-family: arial,'宋体';
 	color: #424e67;
