@@ -200,7 +200,7 @@ var tools = (function(){
 				xhr.send();
 			} else {
 				xhr.open(settings.url);
-				xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+				xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 				xhr.send(settings.data);
 			}
 			xhr.onreadystatechange = function () {

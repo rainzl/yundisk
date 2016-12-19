@@ -35,6 +35,10 @@
 		this.callback();//执行其他交互事件
 	}
 	DataRander.prototype.nav = function () {
+		//如果是是搜索渲染:
+			// this.id不改变
+			// 传数据参数
+		
 		var level = dataControl.getParents(this.data,this.id);
 		var str = '<div class="filesListRoute left">';
 		if ( level.length <= 1 ) {
@@ -413,8 +417,14 @@
 		var aside = tools.$('#aside');
 		
 		aside.addEventListener('click',function(ev){
+			var prevObj = tools.getByClass('active',aside)[0];
+			var li = tools.findParent(ev.target,aside.children);
+			tools.rmClass(prevObj,'active');
+			tools.addClass(li,'active');
+			
 			if ( tools.indexOfStr(ev.target.className,'asideImg') || tools.indexOfStr(ev.target.parentNode.className,'asideImg') ) {
 				var imgArr = dataControl.findFile(data.files,'type','img');
+				
 				_this.searchRandFile(imgArr);
 			} else if (tools.indexOfStr(ev.target.className,'asideText') ||tools.indexOfStr(ev.target.parentNode.className,'asideText')) {
 				var textArr = dataControl.findFile(data.files,'type','txt');
@@ -431,13 +441,18 @@
 			} else if (tools.indexOfStr(ev.target.className,'asideOther') || tools.indexOfStr(ev.target.parentNode.className,'asideOther')) {
 				var otherArr = dataControl.findFile(data.files,'type','other');
 				_this.searchRandFile(otherArr);
+			}else if (tools.indexOfStr(ev.target.className,'asideAll') || tools.indexOfStr(ev.target.parentNode.className,'asideAll')) {
+				//var allArr = dataControl.findFile(data.files,'pid',0);
+				_this.id = 0;
+				_this.nav();//在点击事件完重新调用dom渲染方法
+				_this.body();
 			}
 		})
 	}
 	DataRander.prototype.searchRandFile = function (arr) {
 		var str = '';
 		for ( var i=0; i<arr.length; i++ ) {
-			str = this.randBody(arr[i]);
+			str += this.randBody(arr[i]);
 		}
 		this.obj.innerHTML = str;
 	}
